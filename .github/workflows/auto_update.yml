@@ -1,0 +1,31 @@
+name: Auto Update Repository
+
+# Configura el flujo de trabajo para que se ejecute en un horario específico
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Ejecuta la acción todos los días a las 2 a. m. UTC
+  workflow_dispatch:      # Permite iniciar el flujo de trabajo manualmente desde la interfaz de GitHub
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clona el repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # 2. Realiza un pull para obtener los últimos cambios
+      - name: Pull latest changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin main
+
+      # 3. Haz commit y push si hay cambios
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "Automated update by GitHub Actions"
+          git push origin main
+        continue-on-error: true # Ignora errores si no hay cambios para commit
