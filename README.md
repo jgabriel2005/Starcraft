@@ -1,1 +1,1 @@
-# Starcraft
+# StarCraft
